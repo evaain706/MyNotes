@@ -2,7 +2,7 @@
 ## loader()
 
 라우트가 렌더링되기전에 데이터를 가져오는 함수
-- Promise를 반환 가능하여 async/awiat 사용가능
+- Promise를 반환 가능하여 async/await 사용가능
 - 라우트 단위로 데이터를 미리 로딩
 - 로딩된 데이터는 useLoaderData()로 접근
 
