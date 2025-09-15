@@ -120,7 +120,7 @@ const Dropdown = ({ children }: DropdownProps) => {
 export default Dropdown;
 
 ```
-
+부모컴포넌트에서는 상태들과 로직을 정의한뒤 Context Provider를 사용하여 로직와 상태를 전달
 
 #### Content.tsx
 ```jsx
@@ -138,7 +138,7 @@ const Content = ({ children }: ContentProps) => {
 export default Content;
 
 ```
-
+useDropDown훅을 통하여 필요한 상태나 로직을 가져와서 구현
 #### Item.tsx
 
 ```jsx
@@ -153,7 +153,7 @@ const Item = ({ children, onClick }: ItemProps) => {
 
 export default Item;
 ```
-
+useDropDown훅을 통하여 필요한 상태나 로직을 가져와서 구현
 #### Trigger.tsx
 
 ```jsx
@@ -171,7 +171,7 @@ const Trigger = ({ children }: TriggerProps) => {
 export default Trigger;
 
 ```
-
+useDropDown훅을 통하여 필요한 상태나 로직을 가져와서 구현
 #### index.ts
 
 ```js
@@ -188,7 +188,11 @@ const DropdownComponent = Object.assign(Dropdown, {
 
 export default DropdownComponent;
 ```
+Dropdown부모 컴포넌트와 Trigger,Content,Item의 서브 컴포넌트들을 묶어서 관리하기위해
+Object.assign메소드를 사용
 
+이렇게하면 사용시 <Dropdown.Trigger/>와 같이 불러와서 DropDown의 서브 컴포넌트라는것을
+명확하게 보여줄수있음
 
 #### 사용예시
 
