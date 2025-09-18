@@ -82,5 +82,12 @@ getData();
  - async 함수는 *항상* Promise 객체를 반환 -> 반환값이 바로 Promise로 감싸짐
  - await 키워드가 붙은 Promise가 처리될때까지 기다린뒤 다음코드를 실행
  - await 사용시 try/catch 문법을 사용하여 동기코드와 같이 에러처리가 가능함
+
+
+## async await 사용시 주의점
+
+
+1. 에러처리는 반드시 try-catch 블록 안에서 실행흐름을 고려하여 해야함
+2. await 키워드는 async키워드로 정의된 함수 내에서만 사용가능
  
  
