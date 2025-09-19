@@ -79,7 +79,7 @@ React에서 하나의 부모컴포넌트 내부에 <Comp1/>과 <Comp2/>라는 �
 ### Error Boundary 구현
 
 ```jsx
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Component, ErrorInfo, ReactNode } from "react";
 
 // Props 타입 정의
 interface Props {
@@ -100,7 +100,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   // 2. 렌더링 단계에서 에러가 발생했을 때 호출됨
   // 이 함수는 state를 업데이트하여 다음 렌더링에서 대체 UI를 보여주도록 하는역할
-  public static getDerivedStateFromError(_: Error): State {
+  public static getDerivedStateFromError(): State {
     return { hasError: true };
   }
 
@@ -123,6 +123,7 @@ class ErrorBoundary extends Component<Props, State> {
 
 export default ErrorBoundary;
 ```
+
  `getDerivedStateFromError` `componentDidCatch`와 같은 생명주기 메서드를 사용하기위해
  클래스형 컴포넌트로 구현된다.
 
