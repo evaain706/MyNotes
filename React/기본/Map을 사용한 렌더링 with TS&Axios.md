@@ -31,7 +31,9 @@ app.get('/api/items', (req, res) => {
 `id` `name` `description` 이라는 3개의 필드가 있는 데이터들을 20개 생성하여 배열에 담아 
 응답을 보낸다.
 
-#### 프론트
+---
+
+#### 프론트 코드
 
 ```jsx
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
@@ -80,6 +82,8 @@ export default App;
 
 ```
 
+---
+
 #### 프론트 코드 뜯어보기
 
 ##### 타입선언
@@ -98,6 +102,7 @@ Item이라는 TS 인터페이스를 정의함
 *React 컴포넌트 내부에서 `items`라는 state를 사용할때, 내부의 `id` `name` `description`이
 존재하는지/ 어떤타입인지를 컴파일단계에서 보장가능*
 
+---
 
 ##### state 와 getItems()
 
@@ -165,6 +170,7 @@ const [items, setItems] = useState<Item[]>([]);
     
     - 이때 `items.map(...)`이 실행되어 새로운 UI가 그려짐
   
+---
 
 ##### JSX
 
