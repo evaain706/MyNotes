@@ -20,7 +20,7 @@ interface useInfiniteScrollType {
   
   loading: boolean;
   hasNextPage: boolean;
-  threshold?: number;
+  threshold?: number; // 화면 아래에서 몇 px전에 감지할지여부
 
   onLoadMore: () => void;
 }
@@ -32,10 +32,12 @@ const useInfiniteScroll = ({
   onLoadMore,
 }: useInfiniteScrollType) => {
  
+ // 감지할 DOM요소를 지정하기위한 ref -> div에 연결하는 용도
   const targetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
   
+    // 로딩중이거나 다음페이지가 없으면 로직실행 X
     if (loading || !hasNextPage) return;
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
@@ -47,8 +49,8 @@ const useInfiniteScroll = ({
 
     const observer = new IntersectionObserver(observerCallback, {
      
-      root: null,
-      rootMargin: `0px 0px ${threshold}px 0px`,
+      root: null, // 브라우저의 뷰포트 기준으로 감지
+      rootMargin: `0px 0px ${threshold}px 0px`, 
       threshold: 0,
     });
 
@@ -136,6 +138,7 @@ const PaginationParent: React.FC = () => {
     }
   }, [hasNextPage, nextCursor, fetchItems]);
 
+// 커스텀훅에 loading,hasNextPage,onLoadMore를 주입후 반환값인 ref를 targetRef에 주입
   const targetRef = useInfiniteScroll({
     loading: isLoading,
     hasNextPage: hasNextPage,
@@ -170,6 +173,7 @@ const PaginationParent: React.FC = () => {
       </div>
 
       <div className='mt-8 text-center'>
+         // ref연결
         {hasNextPage && <div ref={targetRef} style={{ height: '50px' }} />}
         {isLoading && <p className='text-gray-500'>로딩 중...</p>}
         {!hasNextPage && items.length > 0 && (
