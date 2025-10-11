@@ -187,7 +187,7 @@ export default useUserStore;
 
 값을 가져오는 `Hydration`과정이 완료되면 그때 값을 `true`로 바꾸도록하여
 
-사용하는 컴포넌트에서 
+사용하는 컴포넌트(Header)에서 
 
 ```jsx
   //플리커링 방지를 위해 하이드레이션이 완료되기 전에는 이부분을 렌더링
