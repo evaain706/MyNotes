@@ -11,6 +11,7 @@ interface ThemeState {
   toggleTheme: () => void;
 }
 
+// 현재 theme state에 따라 html태그의 class를 변경하는 역할
 const handleUpdateClass = (theme: 'light' | 'dark') => {
   const root = document.documentElement;
   if (theme === 'dark') {
@@ -21,6 +22,7 @@ const handleUpdateClass = (theme: 'light' | 'dark') => {
 };
 
 export const useThemeStore = create<ThemeState>()(
+// localstorage에 저장/가져오기위한 persist 미들웨어 사용
   persist(
     (set) => ({
       theme: 'light',
@@ -31,7 +33,8 @@ export const useThemeStore = create<ThemeState>()(
     }),
     {
       name: 'theme-storage',
-
+     
+     //새로고침시 로컬스토리지에서 theme를 복원(새로고침해도 현재테마 유지)
       onRehydrateStorage: () => (state) => {
         if (state) {
           handleUpdateClass(state.theme);
@@ -41,12 +44,16 @@ export const useThemeStore = create<ThemeState>()(
   ),
 );
 
+//theme가 바뀔때마다 실행
 useThemeStore.subscribe((state) => {
   handleUpdateClass(state.theme);
 });
 
 ```
 
+
+
+---
 
 ## index.css Tailwind 커스텀 접두사 추가
 
@@ -62,6 +69,9 @@ if (theme === 'dark') {
 위 store 코드에서 theme이 dark가 되면 루트에 `dark`라는 클래스를 추가하게되는데,
 위 커스텀 접두사를 통해 `.dark`클래스가 html에 있을때 적용되는 `varient`를 추가한다.
 
+
+
+---
 
 ## 사용
 
