@@ -148,6 +148,7 @@ export default KakaoCallback;
 - 리다이렉션된 주소에는 카카오가 발급한 **일회성인가코드**가 쿼리파라미터에 포함됨
 - useEffect훅 내부에서 쿼리문자열(`code?=example`)을 가져온뒤 `code`를 추출
 - 추출한`code`를 **백엔드 서버 API** `/api/auth/kakao`로 전송
+- 요청성공시 `accessToken,refreshToken`을 쿠키로 응답받고 유저정보를 zustand store에 저장
 
 
 ---
@@ -195,4 +196,6 @@ export { privateInstance };
 백엔드는 `code`를 받아 그것을 통해 카카오와 통신한뒤, 사용자정보(id,nickname등)을 획득
 그다음 신규유저일경우 유저등록과 같은 로직들을 거친뒤
 `accessToken / refreshToken`을 발급하여 **쿠키**에 담아서 응답하도록함.
+
+
 
