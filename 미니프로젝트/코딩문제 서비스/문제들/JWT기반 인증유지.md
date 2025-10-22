@@ -82,6 +82,47 @@ axios.get('http://localhost:5000/api/user', { withCredentials: true });
 
 ---
 
+
+
+#### CORS (Cross-Origin Resource Sharing / 교차 출처 리소스 공유)
+
+- **정의**: `SOP`의 제한을 안전하게 우회할 수 있도록 브라우저와 서버가 약속하는 표준 메커니즘
+
+- **원리**: 서버가 응답 헤더를 통해 `여기서 온 요청은 안전하다`라고 브라우저에게 알려주는 방식
+
+##### **작동 방식**
+서버는 응답 헤더에 `Access-Control-Allow-Origin` 등의 헤더를 포함시켜, 어떤 출처로부터의 요청을 허용할지 명시적으로 지정
+
+프론트 예시
+```js
+// axios 인스턴스 설정
+export const axiosPrivate = axios.create({
+  baseURL: 'http://localhost:5000',
+  //  이 인스턴스로 보내는 모든 요청에 쿠키를 포함하게됨
+  withCredentials: true 
+});
+```
+
+백엔드 예시
+```js
+// server.js
+app.use(cors({
+  //  1. Access-Control-Allow-Origin:
+  // 어떤 출처의 요청을 허용할 것인지를 정의
+  // withCredentials가 true일 때는 보안상 '*'(모두 허용)를 절대 사용할 수 없고,
+  // 반드시 http://localhost:5173 처럼 정확한 출처를 명시해야함
+  origin: 'http://localhost:5173', 
+
+  //  2. Access-Control-Allow-Credentials:
+  // 인증 정보(쿠키)를 포함한 요청을 허용할지 정의
+  // 이 값을 true로 설정해야 브라우저가 CORS 에러를 발생하지않음
+  credentials: true,
+}));
+```
+
+##### => 프론트측에서만 withCredentials 설정을 했다고 되는게 아닌 서버측에서도 이를 허용하는 CORS설정을 해야한다
+
+---
 ### **동일출처정책(Same-Origin-Policy,SOP)**
 
 - **정의**: 브라우저에 내장된 규칙으로 보안을 위한 가장 기본적인 브라우저 정책
@@ -94,12 +135,3 @@ axios.get('http://localhost:5000/api/user', { withCredentials: true });
 
 - **교차 출처 (Cross-Origin)**: 셋 중 하나라도 다른 경우
   (예시: `localhost:5173` -> `localhost:5000`)
-
----
-
-#### CORS (Cross-Origin Resource Sharing / 교차 출처 리소스 공유)
-
-- **정의**: SOP의 제한을 안전하게 우회할 수 있도록 브라우저와 서버가 약속하는 표준 메커니즘
-
-- **원리**: 서버가 응답 헤더를 통해 `여기서 온 요청은 안전하다`라고 브라우저에게 알려주는 방식
-
