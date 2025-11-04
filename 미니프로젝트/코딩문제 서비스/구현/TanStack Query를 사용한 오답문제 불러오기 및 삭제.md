@@ -133,7 +133,7 @@ export const useQuiz = () => {
     },
     onSuccess: () => {
       addToast('success', '오답이 삭제되었습니다.');
-      // 쿼리 무효화를 통한 오답문제쿼리 최신화
+      // 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: ['incorrectAnswer'] });
     },
     onError: () => {
