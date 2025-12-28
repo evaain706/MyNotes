@@ -28,6 +28,13 @@ const getIncorrectAnswers = async ({
   };
 ```
 
+``` json
+
+hasNextPage : true
+items : [{id: "694eae4867f6321523bd4e4b",…},…]
+nextCursor: "2025-11-25T16:30:50.241Z"
+
+```
 
 ## useInfiniteQuery란?
 
@@ -80,6 +87,8 @@ const {
 ## `queryFn`
 
 - `pageParam` -> 다음페이지를 요청할 기준값
+-  **`queryFn` 안의 `pageParam`은  
+    `getNextPageParam`이 반환한 값으로 자동 갱신
 
 첫 호출
 
@@ -107,6 +116,7 @@ const {
 getNextPageParam: (lastPage) => lastPage.nextCursor
 ```
 
+- `lastPage` => 마지막으로 성공적으로 받아온 페이지의 응답데이터
 
 ### 내부동작
 ```js
