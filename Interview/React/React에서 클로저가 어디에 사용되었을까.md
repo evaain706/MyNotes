@@ -74,4 +74,77 @@ React가 보장하는 **가장 최신 state**를 인자로 받아 처리한다.
 - state가 유지되는 것처럼 보이게 해주는 핵심 메커니즘이자
 - 동시에 stale state 버그를 만들 수 있는 원인이기도 하다
 
+---
 
+## 오래된 클로저문제?
+
+
+`useEffect`에서 의존성 배열을 잘못 설정했을 때 발생하는 버그의 원인이 바로 클로저임
+
+``` js
+import React, { useState, useEffect } from 'react';
+
+const Timer = () => {
+  const [seconds, setSeconds] = useState<number>(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      // [문제 발생 지점]
+      // 이 콜백 함수는 첫 렌더링(Mount) 시점에 딱 한 번 생성
+      // 그 당시의 seconds는 0
+      // 따라서 이 함수는 영원히 "console.log(0 + 1)"만 반복
+      console.log(seconds + 1); 
+      setSeconds(seconds + 1); // 화면의 숫자가 1에서 멈춤
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []); // 의존성 배열이 비어있음 -> 클로저가 갱신되지 않음
+
+  return <div>{seconds}</div>;
+};
+```
+
+- `useEffect`의 의존성 배열이 `[]`이므로 이 이펙트는 처음에만 실행됩니다.
+
+- `setInterval` 내부의 콜백 함수는 **첫 렌더링 시점의 `seconds` (값: 0)**를 클로저로 캡처
+- 
+- 1초마다 실행되지만, 이 함수가 기억하는 `seconds`는 계속 0
+
+- **해결책:** 의존성 배열에 `[seconds]`를 넣거나, 함수형 업데이트 `setSeconds(prev => prev + 1)`를 사용해야 함
+
+
+## useState 내부구현 원리
+``` js
+// React 내부 동작의 단순화된 의사 코드 (Pseudo-code)
+const React = (function() {
+  let _val; // 이 변수가 클로저 공간에 숨겨져있음
+
+  function useState(initVal) {
+    const state = _val || initVal; // _val이 있으면 그것을 쓰고, 없으면 초기값
+    
+    const setState = (newVal) => {
+      _val = newVal; // 클로저 공간에 있는 _val을 업데이트
+      // 이후 리렌더링을 트리거함
+    };
+    
+    return [state, setState];
+  }
+
+  return { useState };
+})();
+```
+
+- `useState`가 호출되고 실행이 끝나도, `_val`이라는 변수는 사라지지 않고 메모리에 남아있음
+- 
+- 이것이 컴포넌트가 리렌더링(함수 재호출)되어도 상태값이 초기화되지 않고 **유지되는 이유**
+
+
+---
+
+
+- **스냅샷:** React 컴포넌트 내부의 모든 함수(핸들러, Effect 등)는 **"자신이 생성된 렌더링 시점"**의 변수들만 볼 수 있음 -> 클로저의 특성
+  -> React가 메모리에 별도로 보관해서 값이 유지
+
+- **의존성 배열:** `useEffect`나 `useCallback`의 의존성 배열(`deps`)은 **"언제 이 클로저를 깨고 새로운 값을 기억하는 새 함수를 만들 것인가"**를 결정하는 역할을 함
+
+- **함수형 업데이트:** `setCount(prev => prev + 1)`을 쓰면 클로저로 캡처된 옛날 값(`count`) 대신, React 내부의 최신 상태값(`prev`)을 인자로 받아올 수 있어 오래된 클로저 문제를 피할 수 있음
