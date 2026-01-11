@@ -17,10 +17,18 @@
 
 #### 재조정?
 
-상태 변경 시 이전 Virtual DOM과 새 Virtual DOM을 비교하여  
-최소한의 변경만 실제 DOM에 반영하는 과정
+**재조정(Reconciliation)** 이란  
+**상태(state)나 props가 변경되었을 때**,  
+이전 렌더링 결과로 만들어진 Virtual DOM과  
+새로 생성된 Virtual DOM을 비교하여
+ **실제 DOM에 최소한의 변경만 적용하기 위한 과정**
 
+### 재조정 발생 트리거
 
+- state 변경
+- props 변경
+- context 값 변경
+- 강제 리렌더링
 
 ---
 
